@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 
 const donationSchema = new Schema(
   {
-    userId: {
+    donorId: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
@@ -33,15 +33,7 @@ const donationSchema = new Schema(
 );
 
 bookSchema.pre(["find", "findOne"], function () {
-  this.populate("donor");
-});
-
-bookSchema.pre(["find", "findOne"], function () {
-  this.populate("recipient");
-});
-
-bookSchema.pre(["find", "findOne"], function () {
-  this.populate("book");
+  this.populate(["donor", "recipient", "book"]);
 });
 
 const Donation = model("Donation", donationSchema);

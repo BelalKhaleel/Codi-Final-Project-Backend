@@ -29,15 +29,7 @@ const courseSchema = new Schema(
 );
 
 bookSchema.pre(["find", "findOne"], function () {
-  this.populate("donor");
-});
-
-bookSchema.pre(["find", "findOne"], function () {
-  this.populate("recipient");
-});
-
-bookSchema.pre(["find", "findOne"], function () {
-  this.populate("university");
+  this.populate(["donor", "recipient", "university"]);
 });
 
 const Course = model("Course", courseSchema);

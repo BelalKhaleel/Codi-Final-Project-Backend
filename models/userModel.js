@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import mongoosePaginate from "mongoose-paginate-v2";
+// import addressModel from "../models/addressModel.js";
 
 const { Schema, model } = mongoose;
 
@@ -19,23 +20,23 @@ const userSchema = new Schema(
       match:
         /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
     },
-    password: { type: String, required: true },
+    password: {
+      type: String,
+      required: true,
+    },
     phoneNumber: {
       type: String,
       required: [true, "Phone Number is required"],
+      unique: true,
       trim: true,
     },
-    address: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "address",
-      },
-    ],
-    role: {
-      type: String,
-      enum: ["admin", "donor", "recipient"],
-      required: [true, "Role is required"],
-      default: null,
+    Address: {
+      type: Schema.Types.ObjectId,
+      ref: "Address",
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -46,7 +47,7 @@ const userSchema = new Schema(
 userSchema.plugin(mongoosePaginate);
 
 userSchema.pre("save", async function (next) {
-  const salt = await bcrypt.genSaltSync(10);
+  const salt = bcrypt.genSaltSync(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
@@ -60,7 +61,7 @@ userSchema.methods.isValidPassword = async function (password) {
 };
 
 userSchema.pre(["find", "findOne"], function () {
-  this.populate("address");
+  this.populate("Address");
 });
 
 const User = model("User", userSchema);

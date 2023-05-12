@@ -6,7 +6,22 @@ const addressSchema = new Schema(
   {
     governorate: {
       type: String,
+      enum: [
+        "Akkar",
+        "Baalbeck-Hermel",
+        "Beirut",
+        "Bekaa",
+        "Mount Lebanon",
+        "North Lebanon",
+        "Nabatiyeh",
+        "South Lebanon",
+      ],
       required: [true, "Governorate is required"],
+      trim: true,
+    },
+    district: {
+      type: String,
+      required: [true, "District is required"],
       trim: true,
     },
     city: {
@@ -16,16 +31,15 @@ const addressSchema = new Schema(
     },
     street: {
       type: String,
-      required: [true, "Street is required"],
       trim: true,
     },
     building: {
-        type: String,
-        trim: true
+      type: String,
+      trim: true,
     },
     floor: {
       type: String,
-      trim: true
+      trim: true,
     },
   },
   {

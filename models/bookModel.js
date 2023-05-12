@@ -56,11 +56,7 @@ const bookSchema = new Schema(
 );
 
 bookSchema.pre(["find", "findOne"], function () {
-  this.populate("donor");
-});
-
-bookSchema.pre(["find", "findOne"], function () {
-  this.populate("recipient");
+  this.populate(["donor", "recipient"]);
 });
 
 const Book = model("Book", bookSchema);
