@@ -8,6 +8,7 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 // import protectedRoutes from "./routes/protectedRoutes.js";
 import addressRoutes from "./routes/addressRoutes.js";
+import universityRoutes from "./routes/universityRoutes.js";
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/user", userRoutes);
 app.use("/api/address", addressRoutes);
+app.use("/api/university", universityRoutes);
 // app.use("/", protectedRoutes);
 
 app.listen(

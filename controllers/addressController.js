@@ -1,47 +1,5 @@
 import Address from "../models/addressModel.js";
 
-// //get all addresses
-// export const getAllAddresses = async (req, res, next) => {
-//   try {
-//     const { page, limit } = req.query;
-
-//     const pageNumber = parseInt(page);
-//     const limitNumber = parseInt(limit);
-
-//     // Paginate items using mongoose-paginate-v2
-//     const options = {
-//       page: pageNumber || 1,
-//       limit: limitNumber || 10,
-//     };
-
-//     const items = await Address.paginate({}, options);
-
-//     return res.status(200).json({
-//       items: items.docs,
-//       totalPages: items.totalPages,
-//       currentPage: items.page,
-//       limit: items.limit,
-//       totalItems: items.totalDocs,
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-
-// //get an address by id
-// export const getAddressById = async (req, res, next) => {
-//   try {
-//     let { id } = req.params;
-//     let address = await Address.findOne({ _id: id });
-//     if (!address) {
-//       throw new Error("Address not found");
-//     }
-//     res.status(200).json({ success: true, address });
-//   } catch (error) {
-//     res.status(404).json({ success: false, message: error.message });
-//   }
-// };
-
 // get all addresses
 export const getAllAddresses = async (req, res) => {
   try {

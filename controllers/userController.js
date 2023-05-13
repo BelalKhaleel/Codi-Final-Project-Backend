@@ -42,12 +42,13 @@ export const getUserById = async (req, res, next) => {
     res.status(200).json({ success: true, user });
   } catch (error) {
     if (error instanceof mongoose.CastError) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
     res.status(404).json({ success: false, message: error.message });
   }
 };
-
 
 // User Registration
 export const signup_user = async (req, res, next) => {
@@ -143,7 +144,6 @@ export const user_login = async (req, res, next) => {
 
     // Check if email exists in database
     const user = await User.findOne({ email });
-    console.log(user);
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
@@ -158,9 +158,9 @@ export const user_login = async (req, res, next) => {
     const token = generateToken({
       id: user._id,
       email: user.email,
-      isAdmin: user.isAdmin
+      isAdmin: user.isAdmin,
     }); // Customize token payload as needed
-    res.cookie("userToken", token); // Set the token as a cookie, or send it in the response body as needed
+    res.cookie("userToken", token, { httpOnly: true }); // Set the token as a cookie, or send it in the response body as needed
     res.json({ id: user._id, email: user.email, isAdmin: user.isAdmin, token });
   } catch (error) {
     next(error);
@@ -191,7 +191,7 @@ export const editUser = async (req, res, next) => {
         password: hashedPassword,
         address: address,
         phoneNumber: phoneNumber,
-        isAdmin: isAdmin
+        isAdmin: isAdmin,
       },
       {
         new: true,
