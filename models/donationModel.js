@@ -32,7 +32,7 @@ const donationSchema = new Schema(
   }
 );
 
-bookSchema.pre(["find", "findOne"], function () {
+donationSchema.pre(["find", "findOne"], function () {
   this.populate(["donor", "recipient", "book"]);
 });
 

@@ -6,20 +6,27 @@ const courseSchema = new Schema(
     title: {
       type: String,
       required: true,
+      trim: true
     },
-    description: { type: String },
-    donor_id: { 
+    description: { 
+      type: String,
+      required: false,
+      trim: true
+    },
+    donor: { 
       type: Schema.Types.ObjectId, 
       ref: "User", 
-      required: true 
+      required: true,
     },
-    recipient_id: { 
-      type: Schema.Types.ObjectId, ref: "User", 
-      required: true 
-    },
-    university_id: { 
+    recipient: { 
       type: Schema.Types.ObjectId, 
-      ref: "University" 
+      ref: "User", 
+      required: false
+    },
+    university: { 
+      type: Schema.Types.ObjectId, 
+      ref: "University",
+      required: true
     },
   },
   { 
@@ -28,8 +35,8 @@ const courseSchema = new Schema(
   }
 );
 
-bookSchema.pre(["find", "findOne"], function () {
-  this.populate(["donor", "recipient", "university"]);
+courseSchema.pre(["find", "findOne"], function () {
+  this.populate(["donor", "recipient", "university"])
 });
 
 const Course = model("Course", courseSchema);
