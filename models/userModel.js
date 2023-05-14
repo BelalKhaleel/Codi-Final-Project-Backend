@@ -30,7 +30,7 @@ const userSchema = new Schema(
       unique: true,
       trim: true,
     },
-    Address: {
+    address: {
       type: Schema.Types.ObjectId,
       ref: "Address",
     },
@@ -61,7 +61,7 @@ userSchema.methods.isValidPassword = async function (password) {
 };
 
 userSchema.pre(["find", "findOne"], function () {
-  this.populate("Address");
+  this.populate("address");
 });
 
 const User = model("User", userSchema);

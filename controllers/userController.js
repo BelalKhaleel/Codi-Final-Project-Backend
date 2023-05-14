@@ -15,6 +15,7 @@ export const getAllUsers = async (req, res, next) => {
     const options = {
       page: pageNumber || 1,
       limit: limitNumber || 10,
+      populate: 'address' // specify the field to populate
     };
 
     const users = await User.paginate({}, options);
@@ -53,8 +54,7 @@ export const getUserById = async (req, res, next) => {
 // User Registration
 export const signup_user = async (req, res, next) => {
   try {
-    const { fullName, email, password, phoneNumber, Address, isAdmin } =
-      req.body;
+    const { fullName, email, password, phoneNumber, address, isAdmin } = req.body;
 
     if (!fullName) {
       return res.status(400).json({
@@ -80,7 +80,7 @@ export const signup_user = async (req, res, next) => {
       });
     }
 
-    if (!Address) {
+    if (!address) {
       return res.status(400).json({
         message: "Address is required",
       });
@@ -88,15 +88,14 @@ export const signup_user = async (req, res, next) => {
 
     // Check if email already exists
     const existingUser = await User.findOne({ email: req.body.email });
-    if (existingUser)
+    if (existingUser) {
       return res.status(409).json({
         message: "Email already exists",
       });
+    }
 
     // Check if phone number already exists
-    const existingPhone = await User.findOne({
-      phoneNumber: req.body.phoneNumber,
-    });
+    const existingPhone = await User.findOne({ phoneNumber: req.body.phoneNumber });
     if (existingPhone) {
       return res.status(409).json({
         message: "Phone Number already exists",
@@ -108,26 +107,24 @@ export const signup_user = async (req, res, next) => {
       email: email,
       password: password,
       phoneNumber: phoneNumber,
-      Address: Address,
+      address: address,
       isAdmin: isAdmin,
     });
 
-    await newUser
-      .save()
-      .then((response) => {
-        let message = "User Created";
-        if (isAdmin === true) {
-          message = "Admin Created";
-        }
-        res.status(201).json({
-          success: true,
-          response,
-          message,
-        });
-      })
-      .catch((err) => {
-        res.status(400).json({ success: false, err });
-      });
+    // Populate the address field before saving the user
+    await newUser.populate("address");
+    const savedUser = await newUser.save();
+
+    let message = "User Created";
+    if (isAdmin === true) {
+      message = "Admin Created";
+    }
+
+    res.status(201).json({
+      success: true,
+      response: savedUser,
+      message,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -135,6 +132,7 @@ export const signup_user = async (req, res, next) => {
     });
   }
 };
+
 
 //User login
 export const user_login = async (req, res, next) => {
@@ -169,45 +167,87 @@ export const user_login = async (req, res, next) => {
 
 //update a user by id
 export const editUser = async (req, res, next) => {
-  let { id } = req.params;
-  const { fullName, email, password, address, phoneNumber, role } = req.body;
+  const { id } = req.params;
+  const { fullName, email, password, address, phoneNumber, isAdmin } = req.body;
 
   try {
-    // check if admin already exists
-    const oldUser = await User.findOne({ email });
-
-    if (oldUser) {
-      return res.status(409).send("User already exists, please login");
+    // check if the user exists
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).send({ error: "User does not exist"});
     }
 
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    // password = hashedPassword;
     const response = await User.findOneAndUpdate(
       { _id: id },
       {
-        fullName: fullName,
-        email: email,
+        fullName,
+        email,
         password: hashedPassword,
-        address: address,
-        phoneNumber: phoneNumber,
-        isAdmin: isAdmin,
+        address,
+        phoneNumber,
+        isAdmin,
       },
       {
         new: true,
       }
     );
-    res.status(200).send({ success: true, response });
+    const message = isAdmin ? "Admin updated successfully!" : "User updated successfully!";
+    res.status(200).send({ success: true, message, response });
   } catch (err) {
     console.log(err);
     return next(err);
   }
 };
 
+// export const editUser = async (req, res, next) => {
+//   let { id } = req.params;
+//   const { fullName, email, password, address, phoneNumber, isAdmin } = req.body;
+
+//   try {
+    
+//     // check if admin already exists
+//     // const oldUser = await User.findOne({ email });
+
+//     // if (oldUser) {
+//     //   return res.status(409).send("User already exists, please login");
+//     // }
+
+//     const saltRounds = 10;
+//     const hashedPassword = await bcrypt.hash(password, saltRounds);
+//     // password = hashedPassword;
+//     const response = await User.findOneAndUpdate(
+//       { _id: id },
+//       {
+//         fullName: fullName,
+//         email: email,
+//         password: hashedPassword,
+//         address: address,
+//         phoneNumber: phoneNumber,
+//         isAdmin: isAdmin,
+//       },
+//       {
+//         new: true,
+//       }
+//     );
+//     const message = User.isAdmin ? "Admin updated successfully!" : "User updated successfully!";
+//     res.status(200).send({ success: true, message: message, response });
+//   } catch (err) {
+//     console.log(err);
+//     return next(err);
+//   }
+// };
+
 //delete user
 export const delete_user = async (req, res, next) => {
   try {
-    const result = await User.findByIdAndDelete(req.params.id);
+    const result = await User.findByIdAndDelete(req.params.id).populate('address');
+    if (!result) {
+      return res.status(404).json({
+        error: "User not found",
+      });
+    }
     res.status(200).json({
       success: true,
       result,
