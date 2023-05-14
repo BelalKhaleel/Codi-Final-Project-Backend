@@ -14,7 +14,10 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
 
 export function uploadImage(req, res, next) {
   upload.single("image")(req, res, (err) => {
@@ -25,6 +28,7 @@ export function uploadImage(req, res, next) {
     // next();
 
     // Check if 'req.file' is undefined, indicating no file was uploaded
+    console.log(req.file);
     if (!req.file) {
       console.log("No image provided. Skipping image upload.");
       return next();

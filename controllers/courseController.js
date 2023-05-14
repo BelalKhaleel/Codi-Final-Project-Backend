@@ -51,18 +51,25 @@ const createCourse = async (req, res, next) => {
 // Get all courses
 const getCourses = async (req, res, next) => {
   try {
-    const courses = await Course.find().populate([
-      "donor",
-      "recipient",
-      "university",
-    ]);
-    res
-      .status(200)
-      .json({ message: "Courses retrieved successfully.", data: courses });
+    const page = parseInt(req.query.page) || 1; // Get page number from query parameter, default to 1
+    const perPage = parseInt(req.query.perPage) || 10; // Get number of items per page from query parameter, default to 10
+
+    const courses = await Course.find()
+      .skip((page - 1) * perPage) // Skip the first (page - 1) * perPage items
+      .limit(perPage) // Return only perPage items
+      .populate(["donor", "recipient", "university"]);
+
+    res.status(200).json({
+      message: "Courses retrieved successfully.",
+      data: courses,
+      currentPage: page,
+      totalPages: Math.ceil((await Course.countDocuments()) / perPage),
+    });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong." });
   }
 };
+
 
 // GET /courses/:id
 // Get a course by id

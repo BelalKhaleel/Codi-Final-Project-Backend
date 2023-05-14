@@ -63,29 +63,29 @@ export const addBook = async (req, res) => {
       }
   
       // Check required fields
-      // if (!title) {
-      //   return res.status(400).json({ error: "Title is required." });
-      // }
+      if (!title) {
+        return res.status(400).json({ error: "Title is required." });
+      }
   
-      // if (!author) {
-      //   return res.status(400).json({ error: "Author is required." });
-      // }
+      if (!author) {
+        return res.status(400).json({ error: "Author is required." });
+      }
   
-      // if (!description) {
-      //   return res.status(400).json({ error: "Description is required." });
-      // }
+      if (!description) {
+        return res.status(400).json({ error: "Description is required." });
+      }
   
-      // if (!donor) {
-      //   return res.status(400).json({ error: "Donor is required." });
-      // }
+      if (!donor) {
+        return res.status(400).json({ error: "Donor is required." });
+      }
   
-      // if (!condition) {
-      //   return res.status(400).json({ error: "Condition is required." });
-      // }
+      if (!condition) {
+        return res.status(400).json({ error: "Condition is required." });
+      }
   
-      // if (!status) {
-      //   return res.status(400).json({ error: "Status is required." });
-      // }
+      if (!status) {
+        return res.status(400).json({ error: "Status is required." });
+      }
   
       const newBook = new Book({
         title,

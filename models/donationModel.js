@@ -4,26 +4,31 @@ const { Schema, model } = mongoose;
 
 const donationSchema = new Schema(
   {
-    donorId: {
+    donor: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true
     },
-    recipientId: {
+    recipient: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true
     },
-    bookId: {
+    book: {
       type: Schema.Types.ObjectId,
       ref: "Book",
+      required: true
     },
     date: {
       type: Date,
       default: Date.now,
+      required: true
     },
     status: {
       type: String,
       enum: ["delivered", "not delivered"],
       default: "not delivered",
+      required: true
     },
   },
   {
