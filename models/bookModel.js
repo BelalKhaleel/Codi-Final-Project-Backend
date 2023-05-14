@@ -28,6 +28,7 @@ const bookSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: false,
+      default: null,
     },
     isDeleted: {
       type: Boolean,
@@ -39,7 +40,7 @@ const bookSchema = new Schema(
     },
     condition: {
       type: String,
-      enum: ["New", "Like New", "Very Good", "Good", "Acceptable"],
+      enum: ["Like New", "Good", "Acceptable"],
       required: true,
     },
     status: {

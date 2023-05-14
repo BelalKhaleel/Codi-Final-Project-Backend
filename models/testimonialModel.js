@@ -12,6 +12,7 @@ const testimonialSchema = new Schema(
     comment: {
       type: String,
       required: true,
+      trim: true
     },
   },
   {
@@ -19,6 +20,10 @@ const testimonialSchema = new Schema(
     timestamps: true,
   }
 );
+
+testimonialSchema.pre(["find", "findOne"], function () {
+  this.populate("user")
+});
 
 const Testimonial = model("Testimonial", testimonialSchema);
 
