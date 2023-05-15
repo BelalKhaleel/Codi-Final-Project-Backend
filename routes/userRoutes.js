@@ -15,12 +15,12 @@ router.post("/register", signup_user);
 router.post("/login", user_login);
 
 // Protected routes accessible to authenticated users
-router.get("/:id", getUserById);
-router.put("/:id", editUser);
-router.patch("/:id", editUser);
+router.get("/:id", authenticateUser , getUserById);
+router.put("/:id", authenticateUser, editUser);
+router.patch("/:id", authenticateUser, editUser);
 
 // Protected routes accessible to admins only
 router.get("/", authenticateAdmin, getAllUsers);
-router.delete("/:id", delete_user);
+router.delete("/:id", authenticateUser, delete_user);
 
 export default router;

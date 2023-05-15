@@ -6,15 +6,15 @@ import {
   editDonationById,
   deleteDonationById,
 } from "../controllers/donationController.js";
-import { authenticateUser } from "../middleware/authMiddleware.js";
+import { authenticateAdmin, authenticateUser } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.get("/",authenticateUser ,getDonations);
-router.get("/:id", getDonationById);
-router.post("/", addDonation);
-router.put("/:id", editDonationById);
-router.patch("/:id", editDonationById);
-router.delete("/:id", deleteDonationById);
+router.get("/:id", authenticateUser, getDonationById);
+router.post("/", authenticateUser, addDonation);
+router.put("/:id", authenticateAdmin, editDonationById);
+router.patch("/:id", authenticateAdmin, editDonationById);
+router.delete("/:id", authenticateAdmin, deleteDonationById);
 
 export default router;

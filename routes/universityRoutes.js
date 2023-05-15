@@ -9,6 +9,7 @@ import {
   deleteUniversityById,
   deleteUniversityByName
 } from "../controllers/universityController.js";
+import { authenticateAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -22,19 +23,19 @@ router.get("/:id", getUniversityById);
 router.get("/name/:name", getUniversityByName);
 
 // POST create university
-router.post("/", createUniversity);
+router.post("/", authenticateAdmin, createUniversity);
 
 // PUT update university by ID
-router.put("/:id", updateUniversityById);
+router.put("/:id", authenticateAdmin, updateUniversityById);
 
 // PUT update university by name
-router.put("/name/:name", updateUniversityByName);
+router.put("/name/:name", authenticateAdmin, updateUniversityByName);
 
 // DELETE university by ID
-router.delete("/:id", deleteUniversityById);
+router.delete("/:id", authenticateAdmin, deleteUniversityById);
 
 // DELETE university by name
-router.delete('/name/:name', deleteUniversityByName);
+router.delete('/name/:name', authenticateAdmin, deleteUniversityByName);
 
 
 export default router;
