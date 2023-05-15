@@ -1,21 +1,33 @@
 import multer from "multer";
-import fs from "fs";
+// import fs from "fs";
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
+  destination: (req, file, callback) => {
+    callback(null, "uploads/");
   },
-  filename: (req, file, cb) => {
+  filename: (req, file, callback) => {
     console.log(file);
-    cb(
+    callback(
       null,
       `${file.originalname.split(".")[0]}.${file.mimetype.split("/")[1]}`
     );
   },
 });
 
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(new Error("File type not supported"), false);
+  }
+};
 const upload = multer({
   storage: storage,
+  fileFilter,
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
@@ -35,40 +47,29 @@ export function uploadImage(req, res, next) {
     }
 
     // Set the uploaded image file path to 'req.body.image'
-    req.body.image = req.file.path;
-    console.log(req.body.image);
+    req.imagePath = req.file.path;
+    console.log(req.imagePath);
     next();
   });
 }
 
-const image = {
-  uploadImage,
-};
+// const image = {
+//   uploadImage,
+// };
 
-export default image;
+// export default image;
 
 // import multer from "multer";
 
 // const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "./uploads/");
+//   destination: (req, file, callback) => {
+//     callback(null, "./uploads/");
 //   },
-//   filename: function (req, file, cb) {
-//     cb(null, new Date().toISOString() + "-" + file.originalname);
+//   filename: function (req, file, callback) {
+//     callback(null, new Date().toISOString() + "-" + file.originalname);
 //   },
 // });
 
-// const fileFilter = (req, file, cb) => {
-//   if (
-//     file.mimetype === "image/jpeg" ||
-//     file.mimetype === "image/png" ||
-//     file.mimetype === "image/jpg"
-//   ) {
-//     cb(null, true);
-//   } else {
-//     cb(new Error("File type not supported"), false);
-//   }
-// };
 
 // const upload = multer({
 //   storage: storage,

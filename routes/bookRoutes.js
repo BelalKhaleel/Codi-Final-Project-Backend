@@ -1,13 +1,13 @@
 import express from "express";
 const router = express.Router();
 import controller from "../controllers/bookController.js";
-import uploadImage from "../middleware/imageUpload.js";
+import { uploadImage } from "../middleware/imageUpload.js";
 
 router.get("/", controller.getAllBooks);
 router.get("/:id", controller.getBookById);
 
-router.post("/", uploadImage.uploadImage, controller.addBook);
-router.put("/:id", uploadImage.uploadImage, controller.editBookById);
+router.post("/", uploadImage, controller.addBook);
+router.put("/:id", uploadImage, controller.editBookById);
 router.delete("/:id", controller.deleteBookById);
 
 export default router;

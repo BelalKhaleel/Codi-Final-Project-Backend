@@ -4,7 +4,7 @@ import fs from "fs";
 //get all books
 export const getAllBooks = async (req, res, next) => {
   try {
-  const { page, limit } = req.query;
+    const { page, limit } = req.query;
 
     const pageNumber = parseInt(page);
     const limitNumber = parseInt(limit);
@@ -27,7 +27,7 @@ export const getAllBooks = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-}
+};
 
 //GET book by id
 export const getBookById = async (req, res) => {
@@ -41,77 +41,70 @@ export const getBookById = async (req, res) => {
     console.error(`Error getting Book by ID: ${error.message}`);
     res.status(500).json({ message: "Server error" });
   }
-}
+};
 
 //add book
 export const addBook = async (req, res) => {
-    console.log(req.body);
-    try {
-      const {
-        title,
-        author,
-        description,
-        donor,
-        recipient,
-        condition,
-        status,
-      } = req.body;
-
-      let imagePath;
-      if (req.file) {
-        imagePath = req.file.path;
-      }
-  
-      // Check required fields
-      if (!title) {
-        return res.status(400).json({ error: "Title is required." });
-      }
-  
-      if (!author) {
-        return res.status(400).json({ error: "Author is required." });
-      }
-  
-      if (!description) {
-        return res.status(400).json({ error: "Description is required." });
-      }
-  
-      if (!donor) {
-        return res.status(400).json({ error: "Donor is required." });
-      }
-  
-      if (!condition) {
-        return res.status(400).json({ error: "Condition is required." });
-      }
-  
-      if (!status) {
-        return res.status(400).json({ error: "Status is required." });
-      }
-  
-      const newBook = new Book({
-        title,
-        author,
-        description,
-        donor,
-        recipient,
-        image: imagePath,
-        condition,
-        status,
-      });
-  
-      const savedBook = await newBook.save();
-      res.status(201).json({
-        message: "Book added successfully.",
-        data: { id: savedBook._id, info: savedBook },
-      });
-    } catch (error) {
-      console.error(error.message);
+  console.log(req.body);
+  try {
+    const { title, author, description, donor, recipient, condition, status } =
+      req.body;
+      const image = req.imagePath;
+      // let imagePath;
+      // if (req.file) {
+        //   imagePath = req.file.path;
+    // }
+    
+    // Check required fields
+    if (!title) {
+      return res.status(400).json({ error: "Title is required." });
+    }
+    
+    if (!author) {
+      return res.status(400).json({ error: "Author is required." });
+    }
+    
+    if (!description) {
+      return res.status(400).json({ error: "Description is required." });
+    }
+    
+    if (!donor) {
+      return res.status(400).json({ error: "Donor is required." });
+    }
+    
+    if (!condition) {
+      return res.status(400).json({ error: "Condition is required." });
+    }
+    
+    if (!status) {
+      return res.status(400).json({ error: "Status is required." });
+    }
+    
+    const newBook = new Book({
+      title,
+      author,
+      description,
+      donor,
+      recipient,
+      condition,
+      status,
+      image,
+    });
+    
+    const savedBook = await newBook.save();
+    res.status(201).json({
+      message: "Book added successfully.",
+      data: { id: savedBook._id, info: savedBook },
+    });
+  } catch (error) {
+    console.error(error.message);
     if (error.name === "ValidationError") {
       const errors = Object.values(error.errors).map((err) => err.message);
       return res.status(400).json({ message: errors });
     }
     res.status(500).json({ message: "Failed to add book." });
-    }
-  };
+  }
+};
 
 //edit book by id
 export const editBookById = async (req, res, next) => {
@@ -128,7 +121,7 @@ export const editBookById = async (req, res, next) => {
     console.log(err);
     return next(err);
   }
-}
+};
 
 // delete book
 export const deleteBookById = async (req, res, next) => {
@@ -151,7 +144,7 @@ export const deleteBookById = async (req, res, next) => {
     console.log(err);
     return next(err);
   }
-}
+};
 
 const controller = {
   getAllBooks,

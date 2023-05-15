@@ -34,10 +34,6 @@ const bookSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    image: {
-      type: String,
-      required: false,
-    },
     condition: {
       type: String,
       enum: ["Like New", "Good", "Acceptable"],
@@ -48,6 +44,10 @@ const bookSchema = new Schema(
       enum: ["Available", "Not Available"],
       default: "Available",
       required: true,
+    },
+    image: {
+      type: String,
+      required: false,
     },
   },
   {
