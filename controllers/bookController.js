@@ -1,5 +1,6 @@
 import Book from "../models/bookModel.js";
 import fs from "fs";
+import mongoose from "mongoose";
 
 //get all books
 export const getAllBooks = async (req, res, next) => {
@@ -31,6 +32,15 @@ export const getAllBooks = async (req, res, next) => {
 
 //GET book by id
 export const getBookById = async (req, res) => {
+  let { id } = req.params;
+  // Check if id is present in the URL
+  if (!id) {
+   return res.status(400).send({ message: "Please enter book id" });
+ }
+ // Check if id is a valid MongoDB ObjectId
+ if (!mongoose.isValidObjectId(id)) {
+   return res.status(400).send({ message: "Please enter valid book id" });
+ }
   try {
     const book = await Book.findById(req.params.id);
     if (!book) {
@@ -106,14 +116,34 @@ export const addBook = async (req, res) => {
   }
 };
 
-//edit book by id
+// edit book by id
 export const editBookById = async (req, res, next) => {
   let { id } = req.params;
+   // Check if id is present in the URL
+   if (!id) {
+    return res.status(400).send({ message: "Please enter book id" });
+  }
+  // Check if id is a valid MongoDB ObjectId
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).send({ message: "Please enter valid book id" });
+  }
   try {
-    const oldBook = await Book.findById(req.params.id);
-    console.log(req.body.image);
+    const oldBook = await Book.findById(id);
+    if (!oldBook) {
+      return res.status(404).send({ message: "Book not found" });
+    }
     !req.body.image ? null : fs.unlinkSync(oldBook.image);
-    const response = await Book.findOneAndUpdate({ _id: id }, req.body, {
+    const { title, author, description, donor, recipient, condition, status, image } = req.body;
+    const updates = {};
+    if (title) updates.title = title;
+    if (author) updates.author = author;
+    if (description) updates.description = description;
+    if (donor) updates.donor = donor;
+    if (recipient) updates.recipient = recipient;
+    if (condition) updates.condition = condition;
+    if (status) updates.status = status;
+    if (image) updates.image = image;
+    const response = await Book.findOneAndUpdate({ _id: id }, { $set: updates }, {
       new: true,
     });
     res.status(200).send({ success: true, response });
@@ -126,10 +156,18 @@ export const editBookById = async (req, res, next) => {
 // delete book
 export const deleteBookById = async (req, res, next) => {
   let { id } = req.params;
+   // Check if id is present in the URL
+   if (!id) {
+    return res.status(400).send({ message: "Please enter book id" });
+  }
+  // Check if id is a valid MongoDB ObjectId
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).send({ message: "Please enter valid book id" });
+  }
   try {
     const oldBook = await Book.findById(req.params.id);
     if (!oldBook) {
-      return res.status(409).send({ message: "Book does not exists" });
+      return res.status(409).send({ message: "Book does not exist" });
     }
     !oldBook.image ? null : fs.unlinkSync(oldBook.image);
     const response = await Book.findOneAndDelete({ _id: id }, req.body, {

@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import User from "./userModel.js";
+import Book from "./bookModel.js";
 
 const { Schema, model } = mongoose;
 
@@ -37,8 +39,10 @@ const donationSchema = new Schema(
   }
 );
 
-donationSchema.pre(["find", "findOne"], function () {
-  this.populate(["donor", "recipient", "book"]);
+donationSchema.pre(["find", "findOne", "save", "findOneAndUpdate"], function () {
+  this.populate({ path: "donor", model: User, select: "-password -phoneNumber -isAdmin"});
+  this.populate({ path: "recipient", model: User, select: "-password -phoneNumber -isAdmin" });
+  this.populate({ path: "book", model: Book, select: "-isDeleted" });
 });
 
 const Donation = model("Donation", donationSchema);

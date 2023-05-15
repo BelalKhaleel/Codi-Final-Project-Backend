@@ -8,6 +8,7 @@ router.get("/:id", controller.getBookById);
 
 router.post("/", uploadImage, controller.addBook);
 router.put("/:id", uploadImage, controller.editBookById);
+router.patch("/:id", uploadImage, controller.editBookById);
 router.delete("/:id", controller.deleteBookById);
 
 export default router;

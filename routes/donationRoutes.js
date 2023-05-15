@@ -13,6 +13,7 @@ router.get("/", getDonations);
 router.get("/:id", getDonationById);
 router.post("/", addDonation);
 router.put("/:id", editDonationById);
+router.patch("/:id", editDonationById);
 router.delete("/:id", deleteDonationById);
 
 export default router;

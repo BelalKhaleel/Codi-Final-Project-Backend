@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import mongoosePaginate from "mongoose-paginate-v2";
+import Address from "./addressModel.js";
 // import addressModel from "../models/addressModel.js";
 
 const { Schema, model } = mongoose;
@@ -61,7 +62,7 @@ userSchema.methods.isValidPassword = async function (password) {
 };
 
 userSchema.pre(["find", "findOne"], function () {
-  this.populate("address");
+  this.populate({ path: "address", model: Address });
 });
 
 const User = model("User", userSchema);

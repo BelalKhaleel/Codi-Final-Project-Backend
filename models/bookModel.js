@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import mongoosePaginate from 'mongoose-paginate-v2';
+import User from "./userModel.js";
+import Address from "./addressModel.js";
 
 const { Schema, model } = mongoose;
 
@@ -56,9 +59,28 @@ const bookSchema = new Schema(
   }
 );
 
-bookSchema.pre(["find", "findOne"], function () {
-  this.populate(["donor", "recipient"]);
+
+bookSchema.pre(["find", "findOne", "save", "findOneAndUpdate"], function () {
+  this.populate({ path: "donor", model: User, select: "-password -phoneNumber -isAdmin"});
+  this.populate({ path: "recipient", model: User, select: "-password -phoneNumber -isAdmin" });
 });
+
+// bookSchema.pre(["find", "findOne", "save", "findOneAndUpdate"], function () {
+//   this.populate({ 
+//     path: "donor", 
+//     model: User, 
+//     select: "-password -phoneNumber -isAdmin", 
+//     // populate: { path: "address", model: Address } // Populate Address field in User model
+//   });
+//   this.populate({ 
+//     path: "recipient", 
+//     model: User, 
+//     select: "-password -phoneNumber -isAdmin", 
+//     // populate: { path: "address", model: Address } // Populate Address field in User model
+//   });
+// });
+
+bookSchema.plugin(mongoosePaginate);
 
 const Book = model("Book", bookSchema);
 
