@@ -1,4 +1,5 @@
 import University from "../models/universityModel.js";
+import Course from "../models/courseModel.js";
 
 // Get all universities
 export const getAllUniversities = async (req, res) => {
@@ -46,13 +47,16 @@ export const getUniversityByName = async (req, res) => {
 
 // Create a new university
 export const createUniversity = async (req, res) => {
-  const { name } = req.body;
+  const { name, course } = req.body;
+  if(!name) {
+    return res.status(400).json({ message: "Please choose a university" }); 
+  }
   try {
     const existingUniversity = await University.findOne({ name });
     if (existingUniversity) {
       return res.status(400).json({ message: "University already exists" });
     }
-    const university = await University.create({ name });
+    const university = await University.create({ name, course });
     res.status(201).json(university);
   } catch (error) {
     console.error(error);
@@ -66,11 +70,11 @@ export const updateUniversityById = async (req, res) => {
   if (!id) {
     return res.status(400).json({ message: "Please provide university id" });
   }
-  const { name } = req.body;
+  const update = req.body;
   try {
     const university = await University.findByIdAndUpdate(
       id,
-      { name },
+      { $set: update },
       { new: true, runValidators: true }
     );
     if (!university) {
