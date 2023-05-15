@@ -5,16 +5,16 @@ import User from "../models/userModel.js";
 export const authenticateUser = async (req, res, next) => {
   try {
     // Assuming token is stored in a cookie
-    console.log(req.cookies);
-    const token = req.cookies.token;
-
+    // console.log(req.cookies);
+    console.log('Cookies' , req.cookies)
+    const token = req.cookies.userToken;
+    console.log(token)
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: Token not found" });
     }
 
     // Verify and decode JWT token
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-
     // Check user role based on decoded token
     console.log(decodedToken.id);
     const user = await User.findById(decodedToken.id);
@@ -35,8 +35,8 @@ export const authenticateUser = async (req, res, next) => {
 // Middleware to authenticate admin
 export const authenticateAdmin = async (req, res, next) => {
   try {
-    // const token = req.cookies.token; // Assuming token is stored in a cookie
-    const token = req.headers.authorization.split(" ")[1];
+    const token = req.cookies.userToken; // Assuming token is stored in a cookie
+    // const token = req.headers.authorization.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });

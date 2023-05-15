@@ -20,7 +20,7 @@ router.put("/:id", editUser);
 router.patch("/:id", editUser);
 
 // Protected routes accessible to admins only
-router.get("/", getAllUsers);
+router.get("/", authenticateAdmin, getAllUsers);
 router.delete("/:id", delete_user);
 
 export default router;

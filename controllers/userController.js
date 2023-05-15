@@ -145,16 +145,15 @@ export const user_login = async (req, res, next) => {
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-
     // Check if password is correct
     const isValidPassword = await user.isValidPassword(password);
     if (!isValidPassword) {
       return res.status(401).json({ message: "Wrong password" });
     }
-
-    // Generate and send authentication token
+    console.log(user._id);
+    // GenerisValidPasswordate and send authentication token
     const token = generateToken({
-      id: user._id,
+      _id: user._id,
       email: user.email,
       isAdmin: user.isAdmin,
     }); // Customize token payload as needed

@@ -6,10 +6,11 @@ import {
   editDonationById,
   deleteDonationById,
 } from "../controllers/donationController.js";
+import { authenticateUser } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getDonations);
+router.get("/",authenticateUser ,getDonations);
 router.get("/:id", getDonationById);
 router.post("/", addDonation);
 router.put("/:id", editDonationById);
