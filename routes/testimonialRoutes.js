@@ -17,7 +17,7 @@ router.post("/", authenticateUser, addTestimonial);
 router.get("/", getAllTestimonials);
 
 // Get testimonial by ID
-router.get("/:id", getTestimonialById);
+router.get("/:id", authenticateUser, getTestimonialById);
 
 // Update testimonial by ID
 router.put("/:id", authenticateUser, editTestimonialById);

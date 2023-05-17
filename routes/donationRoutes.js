@@ -10,11 +10,11 @@ import { authenticateAdmin, authenticateUser } from "../middleware/authMiddlewar
 
 const router = express.Router();
 
-router.get("/",authenticateUser ,getDonations);
+router.get("/",authenticateAdmin ,getDonations);
 router.get("/:id", authenticateUser, getDonationById);
 router.post("/", authenticateUser, addDonation);
-router.put("/:id", authenticateAdmin, editDonationById);
-router.patch("/:id", authenticateAdmin, editDonationById);
+router.put("/:id", authenticateUser, editDonationById);
+router.patch("/:id", authenticateUser, editDonationById);
 router.delete("/:id", authenticateAdmin, deleteDonationById);
 
 export default router;
