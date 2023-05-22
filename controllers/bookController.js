@@ -57,7 +57,7 @@ export const getBookById = async (req, res) => {
 export const addBook = async (req, res) => {
   console.log(req.body);
   try {
-    const { title, author, description, donor, recipient, condition, status } =
+    const { title, author, course, university, description, donor, recipient, condition, status } =
       req.body;
       const image = req.imagePath;
       // let imagePath;
@@ -78,6 +78,10 @@ export const addBook = async (req, res) => {
       return res.status(400).json({ error: "Description is required." });
     }
     
+    if (!university) {
+      return res.status(400).json({ error: "University is required." });
+    }
+
     if (!donor) {
       return res.status(400).json({ error: "Donor is required." });
     }
@@ -93,6 +97,8 @@ export const addBook = async (req, res) => {
     const newBook = new Book({
       title,
       author,
+      course,
+      university,
       description,
       donor,
       recipient,
@@ -133,10 +139,12 @@ export const editBookById = async (req, res, next) => {
       return res.status(404).send({ message: "Book not found" });
     }
     !req.body.image ? null : fs.unlinkSync(oldBook.image);
-    const { title, author, description, donor, recipient, condition, status, image } = req.body;
+    const { title, author, course, university, description, donor, recipient, condition, status, image } = req.body;
     const updates = {};
     if (title) updates.title = title;
     if (author) updates.author = author;
+    if (course) updates.course = course;
+    if (university) updates.university = university;
     if (description) updates.description = description;
     if (donor) updates.donor = donor;
     if (recipient) updates.recipient = recipient;
@@ -193,191 +201,3 @@ const controller = {
 };
 
 export default controller;
-
-// import Book from "../models/bookModel.js";
-// import path from "path";
-
-// // Add a new book
-// export const addBook = async (req, res) => {
-//   console.log(req.body);
-//   try {
-//     const {
-//       title,
-//       author,
-//       description,
-//       donor,
-//       recipient,
-//       image,
-//       condition,
-//       status,
-//     } = req.body;
-
-//     // Check required fields
-//     // if (!title) {
-//     //   return res.status(400).json({ error: "Title is required." });
-//     // }
-
-//     // if (!author) {
-//     //   return res.status(400).json({ error: "Author is required." });
-//     // }
-
-//     // if (!description) {
-//     //   return res.status(400).json({ error: "Description is required." });
-//     // }
-
-//     // if (!donor) {
-//     //   return res.status(400).json({ error: "Donor is required." });
-//     // }
-
-//     // if (!condition) {
-//     //   return res.status(400).json({ error: "Condition is required." });
-//     // }
-
-//     // if (!status) {
-//     //   return res.status(400).json({ error: "Status is required." });
-//     // }
-
-//     const newBook = new Book({
-//       title,
-//       author,
-//       description,
-//       donor,
-//       recipient,
-//       image: req.file.path,
-//       condition,
-//       status,
-//     });
-
-//     const savedBook = await newBook.save();
-//     res.status(201).json({
-//       message: "Book added successfully.",
-//       data: { id: savedBook._id, info: savedBook },
-//     });
-//   } catch (error) {
-//     console.error(error.message);
-//   if (error.name === "ValidationError") {
-//     const errors = Object.values(error.errors).map((err) => err.message);
-//     return res.status(400).json({ message: errors });
-//   }
-//   res.status(500).json({ message: "Failed to add book." });
-//   }
-// };
-
-// // Edit book by ID
-// export const editBookById = async (req, res) => {
-//   try {
-//     const book = await Book.findByIdAndUpdate(req.params.id, req.body, {
-//       new: true,
-//       runValidators: true,
-//     });
-
-//     if (!book) {
-//       return res.status(404).json({ error: "Book not found." });
-//     }
-
-//     res.status(200).json({
-//       message: "Book updated successfully.",
-//       data: { id: book._id, info: book },
-//     });
-//   } catch (error) {
-//     console.error(error.message);
-//     res.status(500).json({ message: "Failed to update book." });
-//   }
-// };
-
-// // Edit book by title
-// export const editBookByTitle = async (req, res) => {
-//   try {
-//     const book = await Book.findOneAndUpdate(
-//       { title: req.params.title },
-//       req.body,
-//       { new: true, runValidators: true }
-//     );
-
-//     if (!book) {
-//       return res.status(404).json({ error: "Book not found." });
-//     }
-
-//     res.status(200).json({
-//       message: "Book updated successfully.",
-//       data: { id: book._id, info: book },
-//     });
-//   } catch (error) {
-//     console.error(error.message);
-//     res.status(500).json({ message: "Failed to update book." });
-//   }
-// };
-
-// // Get all books
-// export const getAllBooks = async (req, res) => {
-//   try {
-//     const books = await Book.find({ isDeleted: false }).populate([
-//       "donor",
-//       "recipient",
-//     ]);
-
-//     res.status(200).json({
-//       message: "Books retrieved successfully.",
-//       data: { count: books.length, books },
-//     });
-//   } catch (error) {
-//     console.error(error.message);
-//     res.status(500).json({ message: "Failed to retrieve books." });
-//   }
-// };
-
-// // Get a book by ID
-// export const getBookById = async (req, res) => {
-//   try {
-//     const book = await Book.findById(req.params.id).populate(["donor", "recipient"]);
-//     if (!book) {
-//       return res.status(404).json({ message: "Book not found." });
-//     }
-//     res.status(200).json({ data: book });
-//   } catch (error) {
-//     console.error(error.message);
-//     res.status(500).json({ message: "Failed to get book by ID." });
-//   }
-// };
-
-// // Get a book by title
-// export const getBookByTitle = async (req, res) => {
-//   try {
-//     const book = await Book.findOne({ title: req.params.title }).populate(["donor", "recipient"]);
-//     if (!book) {
-//       return res.status(404).json({ message: "Book not found." });
-//     }
-//     res.status(200).json({ data: book });
-//   } catch (error) {
-//     console.error(error.message);
-//     res.status(500).json({ message: "Failed to get book by title." });
-//   }
-// };
-
-// // Delete a book by ID
-// export const deleteBookById = async (req, res) => {
-//   try {
-//     const deletedBook = await Book.findByIdAndDelete(req.params.id);
-//     if (!deletedBook) {
-//       return res.status(404).json({ message: "Book not found." });
-//     }
-//     res.status(200).json({ message: "Book deleted successfully." });
-//   } catch (error) {
-//     console.error(error.message);
-//     res.status(500).json({ message: "Failed to delete book by ID." });
-//   }
-// };
-
-// // Delete a book by title
-// export const deleteBookByTitle = async (req, res) => {
-//   try {
-//     const deletedBook = await Book.findOneAndDelete({ title: req.params.title });
-//     if (!deletedBook) {
-//       return res.status(404).json({ message: "Book not found." });
-//     }
-//     res.status(200).json({ message: "Book deleted successfully." });
-//   } catch (error) {
-//     console.error(error.message);
-//     res.status(500).json({ message: "Failed to delete book by title." });
-//   }
-// };

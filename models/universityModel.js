@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import Course from "./courseModel.js";
 const { Schema, model } = mongoose;
 
 const universitySchema = new Schema({
@@ -47,16 +46,7 @@ const universitySchema = new Schema({
       "Azm University (Azm)",
       "International University of Beirut (BIU)"
     ]    
-  },
-  course: {
-    type: Schema.Types.ObjectId,
-    ref: "Course",
-    required: false
   }
-});
-
-universitySchema.pre(["find", "findOne", "save", "findOneAndUpdate"], function () {
-  this.populate({ path: "course", model: Course, select: "-university"});
 });
 
 const University = model("University", universitySchema);

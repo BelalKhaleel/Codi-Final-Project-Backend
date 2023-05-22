@@ -1,5 +1,4 @@
 import University from "../models/universityModel.js";
-import Course from "../models/courseModel.js";
 
 // Get all universities
 export const getAllUniversities = async (req, res) => {
@@ -47,7 +46,7 @@ export const getUniversityByName = async (req, res) => {
 
 // Create a new university
 export const createUniversity = async (req, res) => {
-  const { name, course } = req.body;
+  const { name } = req.body;
   if(!name) {
     return res.status(400).json({ message: "Please choose a university" }); 
   }
@@ -56,7 +55,7 @@ export const createUniversity = async (req, res) => {
     if (existingUniversity) {
       return res.status(400).json({ message: "University already exists" });
     }
-    const university = await University.create({ name, course });
+    const university = await University.create({ name });
     res.status(201).json(university);
   } catch (error) {
     console.error(error);

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import mongoosePaginate from 'mongoose-paginate-v2';
+import mongoosePaginate from "mongoose-paginate-v2";
 import User from "./userModel.js";
-import Address from "./addressModel.js";
+import University from "./universityModel.js";
 
 const { Schema, model } = mongoose;
 
@@ -17,10 +17,20 @@ const bookSchema = new Schema(
       required: [true, "Author is required"],
       trim: true,
     },
+    course: {
+      type: String,
+      required: false,
+      trim: true,
+    },
     description: {
       type: String,
       required: [true, "Description is required"],
       trim: true,
+    },
+    university: {
+      type: Schema.Types.ObjectId,
+      ref: "University",
+      required: [true, "University is required"],
     },
     donor: {
       type: Schema.Types.ObjectId,
@@ -59,26 +69,23 @@ const bookSchema = new Schema(
   }
 );
 
-
 bookSchema.pre(["find", "findOne", "save", "findOneAndUpdate"], function () {
-  this.populate({ path: "donor", model: User, select: "-password -phoneNumber -isAdmin"});
-  this.populate({ path: "recipient", model: User, select: "-password -phoneNumber -isAdmin" });
+  this.populate({
+    path: "donor",
+    model: User,
+    select: "-password -phoneNumber -isAdmin",
+  });
+  this.populate({
+    path: "recipient",
+    model: User,
+    select: "-password -phoneNumber -isAdmin",
+  });
+  this.populate({
+    path: "university",
+    model: University,
+    select: "-_id",
+  });
 });
-
-// bookSchema.pre(["find", "findOne", "save", "findOneAndUpdate"], function () {
-//   this.populate({ 
-//     path: "donor", 
-//     model: User, 
-//     select: "-password -phoneNumber -isAdmin", 
-//     // populate: { path: "address", model: Address } // Populate Address field in User model
-//   });
-//   this.populate({ 
-//     path: "recipient", 
-//     model: User, 
-//     select: "-password -phoneNumber -isAdmin", 
-//     // populate: { path: "address", model: Address } // Populate Address field in User model
-//   });
-// });
 
 bookSchema.plugin(mongoosePaginate);
 

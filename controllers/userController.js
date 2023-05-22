@@ -15,7 +15,7 @@ export const getAllUsers = async (req, res, next) => {
     const options = {
       page: pageNumber || 1,
       limit: limitNumber || 10,
-      populate: 'address' // specify the field to populate
+      populate: "address", // specify the field to populate
     };
 
     const users = await User.paginate({}, options);
@@ -54,7 +54,8 @@ export const getUserById = async (req, res, next) => {
 // User Registration
 export const signup_user = async (req, res, next) => {
   try {
-    const { fullName, email, password, phoneNumber, address, isAdmin } = req.body;
+    const { fullName, email, password, phoneNumber, address, isAdmin } =
+      req.body;
 
     if (!fullName) {
       return res.status(400).json({
@@ -95,7 +96,9 @@ export const signup_user = async (req, res, next) => {
     }
 
     // Check if phone number already exists
-    const existingPhone = await User.findOne({ phoneNumber: req.body.phoneNumber });
+    const existingPhone = await User.findOne({
+      phoneNumber: req.body.phoneNumber,
+    });
     if (existingPhone) {
       return res.status(409).json({
         message: "Phone Number already exists",
@@ -115,14 +118,21 @@ export const signup_user = async (req, res, next) => {
     await newUser.populate("address");
     const savedUser = await newUser.save();
 
-    let message = "User Created";
-    if (isAdmin === true) {
-      message = "Admin Created";
-    }
+    let message = isAdmin ? "Admin Created" : "User Created";
+
+    // Create a new object without the password field
+    const userResponse = {
+      _id: savedUser._id,
+      fullName: savedUser.fullName,
+      email: savedUser.email,
+      phoneNumber: savedUser.phoneNumber,
+      address: savedUser.address,
+      isAdmin: savedUser.isAdmin,
+    };
 
     res.status(201).json({
       success: true,
-      response: savedUser,
+      response: userResponse,
       message,
     });
   } catch (err) {
@@ -132,7 +142,6 @@ export const signup_user = async (req, res, next) => {
     });
   }
 };
-
 
 //User login
 export const user_login = async (req, res, next) => {
@@ -157,7 +166,12 @@ export const user_login = async (req, res, next) => {
       email: user.email,
       isAdmin: user.isAdmin,
     }); // Customize token payload as needed
-    res.cookie("userToken", token, { httpOnly: true }); // Set the token as a cookie, or send it in the response body as needed
+    res.cookie(
+      "userToken",
+      token,
+      { httpOnly: true },
+      { withCredentials: true }
+    ); // Set the token as a cookie, or send it in the response body as needed
     res.json({ id: user._id, email: user.email, isAdmin: user.isAdmin, token });
   } catch (error) {
     next(error);
@@ -173,7 +187,7 @@ export const editUser = async (req, res, next) => {
     // check if the user exists
     const user = await User.findById(id);
     if (!user) {
-      return res.status(404).send({ error: "User does not exist"});
+      return res.status(404).send({ error: "User does not exist" });
     }
 
     const saltRounds = 10;
@@ -192,7 +206,9 @@ export const editUser = async (req, res, next) => {
         new: true,
       }
     );
-    const message = isAdmin ? "Admin updated successfully!" : "User updated successfully!";
+    const message = isAdmin
+      ? "Admin updated successfully!"
+      : "User updated successfully!";
     res.status(200).send({ success: true, message, response });
   } catch (err) {
     console.log(err);
@@ -205,7 +221,7 @@ export const editUser = async (req, res, next) => {
 //   const { fullName, email, password, address, phoneNumber, isAdmin } = req.body;
 
 //   try {
-    
+
 //     // check if admin already exists
 //     // const oldUser = await User.findOne({ email });
 
@@ -241,7 +257,9 @@ export const editUser = async (req, res, next) => {
 //delete user
 export const delete_user = async (req, res, next) => {
   try {
-    const result = await User.findByIdAndDelete(req.params.id).populate('address');
+    const result = await User.findByIdAndDelete(req.params.id).populate(
+      "address"
+    );
     if (!result) {
       return res.status(404).json({
         error: "User not found",
