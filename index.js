@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === "development") {
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static("./uploads"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

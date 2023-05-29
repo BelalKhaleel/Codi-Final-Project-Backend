@@ -52,31 +52,3 @@ export function uploadImage(req, res, next) {
     next();
   });
 }
-
-// const image = {
-//   uploadImage,
-// };
-
-// export default image;
-
-// import multer from "multer";
-
-// const storage = multer.diskStorage({
-//   destination: (req, file, callback) => {
-//     callback(null, "./uploads/");
-//   },
-//   filename: function (req, file, callback) {
-//     callback(null, new Date().toISOString() + "-" + file.originalname);
-//   },
-// });
-
-
-// const upload = multer({
-//   storage: storage,
-//   limits: {
-//     fileSize: 1024 * 1024 * 5,
-//   },
-//   fileFilter: fileFilter,
-// });
-
-// export default upload;
