@@ -7,7 +7,7 @@ import {
   updateUniversityById,
   updateUniversityByName,
   deleteUniversityById,
-  deleteUniversityByName
+  deleteUniversityByName,
 } from "../controllers/universityController.js";
 import { authenticateAdmin } from "../middleware/authMiddleware.js";
 
@@ -35,7 +35,6 @@ router.put("/name/:name", authenticateAdmin, updateUniversityByName);
 router.delete("/:id", authenticateAdmin, deleteUniversityById);
 
 // DELETE university by name
-router.delete('/name/:name', authenticateAdmin, deleteUniversityByName);
-
+router.delete("/name/:name", authenticateAdmin, deleteUniversityByName);
 
 export default router;

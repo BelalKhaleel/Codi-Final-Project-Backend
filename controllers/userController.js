@@ -166,9 +166,8 @@ export const user_login = async (req, res, next) => {
       email: user.email,
       isAdmin: user.isAdmin,
     }); // Customize token payload as needed
-    res.cookie(
-      "userToken",
-      token,
+    res.json(
+      { "user-token": token },
       { httpOnly: true },
       { withCredentials: true }
     ); // Set the token as a cookie, or send it in the response body as needed
@@ -215,44 +214,6 @@ export const editUser = async (req, res, next) => {
     return next(err);
   }
 };
-
-// export const editUser = async (req, res, next) => {
-//   let { id } = req.params;
-//   const { fullName, email, password, address, phoneNumber, isAdmin } = req.body;
-
-//   try {
-
-//     // check if admin already exists
-//     // const oldUser = await User.findOne({ email });
-
-//     // if (oldUser) {
-//     //   return res.status(409).send("User already exists, please login");
-//     // }
-
-//     const saltRounds = 10;
-//     const hashedPassword = await bcrypt.hash(password, saltRounds);
-//     // password = hashedPassword;
-//     const response = await User.findOneAndUpdate(
-//       { _id: id },
-//       {
-//         fullName: fullName,
-//         email: email,
-//         password: hashedPassword,
-//         address: address,
-//         phoneNumber: phoneNumber,
-//         isAdmin: isAdmin,
-//       },
-//       {
-//         new: true,
-//       }
-//     );
-//     const message = User.isAdmin ? "Admin updated successfully!" : "User updated successfully!";
-//     res.status(200).send({ success: true, message: message, response });
-//   } catch (err) {
-//     console.log(err);
-//     return next(err);
-//   }
-// };
 
 //delete user
 export const delete_user = async (req, res, next) => {

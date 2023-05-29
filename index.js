@@ -13,7 +13,6 @@ import userRoutes from "./routes/userRoutes.js";
 import addressRoutes from "./routes/addressRoutes.js";
 import universityRoutes from "./routes/universityRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
-// import courseRoutes from "./routes/courseRoutes.js";
 import testimonialRoutes from "./routes/testimonialRoutes.js";
 import donationRoutes from "./routes/donationRoutes.js";
 
@@ -38,7 +37,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 
 app.get("/", (req, res) => {
   res.send("API is running...");
@@ -47,7 +49,6 @@ app.get("/", (req, res) => {
 app.use("/api/user", userRoutes);
 app.use("/api/address", addressRoutes);
 app.use("/api/university", universityRoutes);
-// app.use("/api/course", courseRoutes);
 app.use("/api/testimonial", testimonialRoutes);
 app.use("/api/book", bookRoutes);
 app.use("/api/donation", donationRoutes);
