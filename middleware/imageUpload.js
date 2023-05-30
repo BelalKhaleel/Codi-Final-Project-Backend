@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
     console.log(file);
     callback(
       null,
-      `${file.originalname.split(".")[0]}.${file.mimetype.split("/")[1]}`
+      `${Date.now()}-${file.originalname.split(".")[0]}.${file.mimetype.split("/")[1]}`
     );
   },
 });

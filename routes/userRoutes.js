@@ -7,6 +7,7 @@ import {
   getAllUsers,
   getUserById,
   editUser,
+  isLoggedIn,
 } from "../controllers/userController.js";
 import { authenticateUser, authenticateAdmin } from "../middleware/authMiddleware.js";
 
@@ -14,6 +15,8 @@ import { authenticateUser, authenticateAdmin } from "../middleware/authMiddlewar
 router.post("/register", signup_user);
 router.post("/login", user_login);
 
+// check if the user is logged in
+router.get("/is-logged-in", isLoggedIn);
 // // Protected routes accessible to authenticated users
 // router.get("/:id", authenticateUser , getUserById);
 // router.put("/:id", authenticateUser, editUser);
@@ -26,6 +29,8 @@ router.post("/login", user_login);
 router.get("/:id", getUserById);
 router.put("/:id", editUser);
 router.patch("/:id", editUser);
+
+
 
 // Protected routes accessible to admins only
 router.get("/", getAllUsers);

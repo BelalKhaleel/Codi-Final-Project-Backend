@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../controllers/authController.js";
 import mongoose from "mongoose";
+import  jwt  from "jsonwebtoken";
 
 //get all users
 export const getAllUsers = async (req, res, next) => {
@@ -155,11 +156,10 @@ export const user_login = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
     // Check if password is correct
-    const isValidPassword = await user.isValidPassword(password);
+    const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res.status(401).json({ message: "Wrong password" });
     }
-    console.log(user._id);
     // GenerisValidPasswordate and send authentication token
     const token = generateToken({
       _id: user._id,
@@ -170,10 +170,13 @@ export const user_login = async (req, res, next) => {
       { "user-token": token },
       { httpOnly: true },
       { withCredentials: true }
-    ); // Set the token as a cookie, or send it in the response body as needed
-    res.json({ id: user._id, email: user.email, isAdmin: user.isAdmin, token });
+    );
+
   } catch (error) {
-    next(error);
+    console.log(err);
+    res.status(500).json({
+      error: err.message,
+    });
   }
 };
 
@@ -238,3 +241,19 @@ export const delete_user = async (req, res, next) => {
     });
   }
 };
+
+// check if the user has a token and is logged in
+export function isLoggedIn(req, res, next) {
+  let token = req.headers["user-token"];
+  // let token = req.cookies["auth_token"];
+  if (!token) {
+      return res.status(403).json({ success: false, message: "no" });
+  } else {
+      try { 
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);          
+          res.status(200).json({ success: true, message: decoded });
+      } catch (err) {
+          return res.status(401).send("Invalid Token");
+      }
+  }
+}

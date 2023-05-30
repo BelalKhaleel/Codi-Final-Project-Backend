@@ -9,7 +9,7 @@ export const generateToken = (user) => {
   };
 
   // Sign the token with the payload and secret key
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" });
   
   return token;
 };

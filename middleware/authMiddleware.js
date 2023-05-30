@@ -8,7 +8,7 @@ export const authenticateUser = async (req, res, next) => {
     // console.log(req.cookies);
     const token = req.headers["user-token"];
     console.log(token)
-    if (!token) {
+    if (!token && token === null) {
       return res.status(401).json({ message: "Unauthorized: Token not found" });
     }
 
@@ -34,7 +34,7 @@ export const authenticateUser = async (req, res, next) => {
 // Middleware to authenticate admin
 export const authenticateAdmin = async (req, res, next) => {
   try {
-    const token = req.cookies["user-token"]; // Assuming token is stored in a cookie
+    const token = req.header["user-token"]; // Assuming token is stored in a cookie
     // const token = req.headers.authorization.split(" ")[1];
 
     if (!token) {
