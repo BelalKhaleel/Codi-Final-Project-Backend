@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://bookup-jz8l.onrender.com",
   credentials: true,
 }));
 
