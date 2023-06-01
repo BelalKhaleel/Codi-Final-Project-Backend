@@ -169,7 +169,6 @@ export const user_login = async (req, res, next) => {
     res.json(
       { "user-token": token },
       { httpOnly: true },
-      { withCredentials: true }
     );
 
   } catch (error) {

@@ -37,10 +37,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(cors({
-  origin: "https://bookup-jz8l.onrender.com",
-  credentials: true,
-}));
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("API is running...");
