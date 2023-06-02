@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
-// import multer from "multer";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import cors from "cors";

@@ -6,6 +6,7 @@ import {
   delete_user,
   getAllUsers,
   getUserById,
+  getUserByDonorId,
   editUser,
   isLoggedIn,
 } from "../controllers/userController.js";
@@ -27,6 +28,8 @@ router.get("/is-logged-in", isLoggedIn);
 // router.delete("/:id", authenticateUser, delete_user);
 // Protected routes accessible to authenticated users
 router.get("/:id", getUserById);
+router.get("/donor/:donorId", getUserByDonorId);
+
 router.put("/:id", editUser);
 router.patch("/:id", editUser);
 

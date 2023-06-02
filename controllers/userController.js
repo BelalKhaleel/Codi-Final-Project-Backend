@@ -52,6 +52,20 @@ export const getUserById = async (req, res, next) => {
   }
 };
 
+//get user by donor id
+export const getUserByDonorId = async (req, res) => {
+  try {
+    const donorId = req.params.donorId;
+    const user = await User.findById(donorId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 // User Registration
 export const signup_user = async (req, res, next) => {
   try {

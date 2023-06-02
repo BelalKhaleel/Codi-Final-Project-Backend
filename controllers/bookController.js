@@ -14,6 +14,7 @@ export const getAllBooks = async (req, res, next) => {
     const options = {
       page: pageNumber || 1,
       limit: limitNumber || 10,
+      populate: 'donor',
     };
 
     const items = await Book.paginate({}, options);
@@ -49,6 +50,16 @@ export const getBookById = async (req, res) => {
     res.status(200).json(book);
   } catch (error) {
     console.error(`Error getting Book by ID: ${error.message}`);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+//get donated books
+export const getDonatedBooks = async (req, res) => {
+  try {
+    const donatedBooks = await Book.find({ status: "donated" }).populate("donor");
+    res.status(200).json(donatedBooks);
+  } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
