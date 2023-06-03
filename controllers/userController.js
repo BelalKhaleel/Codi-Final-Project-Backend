@@ -131,7 +131,7 @@ export const signup_user = async (req, res, next) => {
 
     const savedUser = await newUser.save();
 
-    let message = isAdmin ? "Admin Created" : "User Created";
+    let message = isAdmin === true ? "Admin Created" : "User Created";
 
     // Create a new object without the password field
     const userResponse = {
@@ -180,13 +180,13 @@ export const user_login = async (req, res, next) => {
     }); // Customize token payload as needed
     res.json(
       { "user-token": token },
-      { httpOnly: true },
+      // { httpOnly: true },
     );
 
   } catch (error) {
-    console.log(err);
+    console.log(error);
     res.status(500).json({
-      error: err.message,
+      error: error.message,
     });
   }
 };
