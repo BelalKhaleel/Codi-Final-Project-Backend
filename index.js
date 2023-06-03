@@ -9,7 +9,6 @@ import path from "path";
 import createError from "http-errors";
 import userRoutes from "./routes/userRoutes.js";
 // import protectedRoutes from "./routes/protectedRoutes.js";
-import addressRoutes from "./routes/addressRoutes.js";
 import universityRoutes from "./routes/universityRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import testimonialRoutes from "./routes/testimonialRoutes.js";
@@ -43,7 +42,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/user", userRoutes);
-app.use("/api/address", addressRoutes);
 app.use("/api/university", universityRoutes);
 app.use("/api/testimonial", testimonialRoutes);
 app.use("/api/book", bookRoutes);

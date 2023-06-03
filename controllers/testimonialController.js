@@ -1,7 +1,6 @@
 import Testimonial from "../models/testimonialModel.js";
 
 // Add a new testimonial
-// Add a new testimonial
 export const addTestimonial = async (req, res) => {
   console.log(req.body);
   try {

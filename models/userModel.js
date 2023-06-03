@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import mongoosePaginate from "mongoose-paginate-v2";
-import Address from "./addressModel.js";
-// import addressModel from "../models/addressModel.js";
 
 const { Schema, model } = mongoose;
 
@@ -32,8 +30,9 @@ const userSchema = new Schema(
       trim: true,
     },
     address: {
-      type: Schema.Types.ObjectId,
-      ref: "Address",
+      type: String,
+      required: [true, "Address is required"],
+      trim: true,
     },
     isAdmin: {
       type: Boolean,
@@ -60,10 +59,6 @@ userSchema.methods.isValidPassword = async function (password) {
     throw error;
   }
 };
-
-userSchema.pre(["find", "findOne"], function () {
-  this.populate({ path: "address", model: Address });
-});
 
 const User = model("User", userSchema);
 export default User;

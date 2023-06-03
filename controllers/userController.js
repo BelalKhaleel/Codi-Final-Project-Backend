@@ -129,8 +129,6 @@ export const signup_user = async (req, res, next) => {
       isAdmin: isAdmin,
     });
 
-    // Populate the address field before saving the user
-    await newUser.populate("address");
     const savedUser = await newUser.save();
 
     let message = isAdmin ? "Admin Created" : "User Created";
@@ -234,9 +232,7 @@ export const editUser = async (req, res, next) => {
 //delete user
 export const delete_user = async (req, res, next) => {
   try {
-    const result = await User.findByIdAndDelete(req.params.id).populate(
-      "address"
-    );
+    const result = await User.findByIdAndDelete(req.params.id);
     if (!result) {
       return res.status(404).json({
         error: "User not found",
@@ -258,9 +254,8 @@ export const delete_user = async (req, res, next) => {
 // check if the user has a token and is logged in
 export function isLoggedIn(req, res, next) {
   let token = req.headers["user-token"];
-  // let token = req.cookies["auth_token"];
   if (!token) {
-      return res.status(403).json({ success: false, message: "no" });
+      return res.status(403).json({ success: false, message: "Token not found" });
   } else {
       try { 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);          
