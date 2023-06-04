@@ -133,6 +133,13 @@ export const signup_user = async (req, res, next) => {
 
     let message = isAdmin === true ? "Admin Created" : "User Created";
 
+     // Generate token and login the signed up user automatically
+     const token = generateToken({
+      _id: savedUser._id,
+      email: savedUser.email,
+      isAdmin: savedUser.isAdmin,
+    }); // Customize token payload as needed
+
     // Create a new object without the password field
     const userResponse = {
       _id: savedUser._id,
@@ -147,6 +154,7 @@ export const signup_user = async (req, res, next) => {
       success: true,
       response: userResponse,
       message,
+      "user-token": token
     });
   } catch (err) {
     console.log(err);
@@ -180,7 +188,6 @@ export const user_login = async (req, res, next) => {
     }); // Customize token payload as needed
     res.json(
       { "user-token": token },
-      // { httpOnly: true },
     );
 
   } catch (error) {
