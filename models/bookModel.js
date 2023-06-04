@@ -73,12 +73,12 @@ bookSchema.pre(["find", "findOne", "save", "findOneAndUpdate"], function () {
   this.populate({
     path: "donor",
     model: User,
-    select: "-password -phoneNumber -isAdmin",
+    select: "-password -isAdmin",
   });
   this.populate({
     path: "recipient",
     model: User,
-    select: "-password -phoneNumber -isAdmin",
+    select: "-password -isAdmin",
   });
   this.populate({
     path: "university",

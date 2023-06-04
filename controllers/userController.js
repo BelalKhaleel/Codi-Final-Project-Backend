@@ -186,8 +186,16 @@ export const user_login = async (req, res, next) => {
       email: user.email,
       isAdmin: user.isAdmin,
     }); // Customize token payload as needed
+    const response = {
+      _id: user._id,
+      email: user.email,
+    }
     res.json(
-      { "user-token": token },
+      { 
+        success: true,
+        message: "User logged in successfully!",
+        response: response,
+        "user-token": token },
     );
 
   } catch (error) {
